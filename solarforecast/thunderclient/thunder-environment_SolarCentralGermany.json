@@ -1,0 +1,30 @@
+{
+    "clientName": "Thunder Client",
+    "environmentName": "SolarCentralGermany",
+    "environmentId": "cbe91518-a50c-49cc-b1c5-05b1f9e835a2",
+    "dateExported": "2024-06-19T08:24:13.769Z",
+    "version": "1.2",
+    "variables": [
+        {
+            "name": "lat",
+            "value": "51.27"
+        },
+        {
+            "name": "lon",
+            "value": "9.54"
+        },
+        {
+            "name": "dec",
+            "value": "45"
+        },
+        {
+            "name": "az",
+            "value": "45"
+        },
+        {
+            "name": "kwp",
+            "value": "3.5"
+        }
+    ],
+    "ref": "rdBvZJ9dq1M2294U_QoVOjIdPmwL_aLN0Gj8F2LWNSSb9gA1hdim7fEBUi0g2nCL"
+}

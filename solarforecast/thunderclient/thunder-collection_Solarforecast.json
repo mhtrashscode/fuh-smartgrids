@@ -1,0 +1,47 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Solarforecast",
+    "collectionId": "dffe760a-76c9-49d4-9d78-f4f6f9c961b3",
+    "dateExported": "2024-06-19T08:24:36.770Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "52b1c073-583c-4ab7-838e-dab11ffce344",
+            "colId": "dffe760a-76c9-49d4-9d78-f4f6f9c961b3",
+            "containerId": "",
+            "name": "CheckLocation",
+            "url": "https://api.forecast.solar/check/51.27/9.54",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-06-19T08:01:50.406Z",
+            "modified": "2024-06-19T08:05:39.578Z",
+            "headers": []
+        },
+        {
+            "_id": "6dfcfd38-f230-42a9-8c85-b5fea69e7550",
+            "colId": "dffe760a-76c9-49d4-9d78-f4f6f9c961b3",
+            "containerId": "",
+            "name": "CheckPlane",
+            "url": "https://api.forecast.solar/check/{{lat}}/{{lon}}/{{dec}}/{{az}}/{{kwp}}",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-06-19T08:06:58.575Z",
+            "modified": "2024-06-19T08:14:45.473Z",
+            "headers": []
+        },
+        {
+            "_id": "bb76b79b-d5dc-438b-9bc4-9cfaeb00c7b3",
+            "colId": "dffe760a-76c9-49d4-9d78-f4f6f9c961b3",
+            "containerId": "",
+            "name": "Estimate",
+            "url": "https://api.forecast.solar/estimate/{{lat}}/{{lon}}/{{dec}}/{{az}}/{{kwp}}",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-06-19T08:16:13.653Z",
+            "modified": "2024-06-19T08:16:52.719Z",
+            "headers": []
+        }
+    ],
+    "ref": "btfwU_7InKWYCM-1-6a13INFJPW2RGFNxp6SVRy7Qdz3QnUEkZ4lScT_j5kwB2RPRqc7gEuuMTIkbNdrlv6bqg"
+}
