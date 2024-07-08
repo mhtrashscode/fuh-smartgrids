@@ -16,3 +16,4 @@ ingress_port: 3000
 ingress_entry: index.html
 panel_icon: mdi:solar-power
 panel_admin: false
+homeassistant_api: true
