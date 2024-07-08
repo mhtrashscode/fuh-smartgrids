@@ -7,7 +7,8 @@ sap.ui.define(["./BaseController", "sap/m/MessageBox"], function (BaseController
 		},
 
 		doStuff: function () {
-			this.getEntities();
+			//this.getEntities();
+			this.navTo("addRecording");
 		},
 
 		getEntities: async function () {

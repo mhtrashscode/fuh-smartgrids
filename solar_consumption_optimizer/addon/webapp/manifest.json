@@ -68,12 +68,21 @@
 					"pattern": "",
 					"name": "main",
 					"target": "main"
-				}
+				},
+				{
+					"pattern": "addRecording",
+					"name": "addRecording",
+					"target": "addRecording"
+				}				
 			],
 			"targets": {
 				"main": {
 					"viewId": "main",
 					"viewName": "Main"
+				},
+				"addRecording": {
+					"viewId": "addRecording",
+					"viewName": "AddRecording"
 				}
 			}
 		}
