@@ -5,11 +5,12 @@ const port = 3000
 
 app.use('/static', express.static(path.join(__dirname, 'static')))
 
-
+/*
 app.get("*", function (req, res) {
     res.send("Express Fallback Route");   
 });
+*/
 
 app.listen(port, () => {
-  console.log(`Demo app listening on port ${port}`)
+  console.log(`Socopt Addon listening on port ${port}`)
 });
