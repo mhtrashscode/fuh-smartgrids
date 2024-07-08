@@ -23,9 +23,9 @@
 						text="{formatter: 'formatter.formatValue', path: 'i18n>btnText'}"
 						press="sayHello" />
 					<Button
-						id="dostuffButton"
+						id="doStuffButton"
 						text="Do Stuff!"
-						press="doStuff" />						
+						press="doStuff" />
 				</additionalContent>
 			</IllustratedMessage>
 		</content>

@@ -4,9 +4,7 @@ Insert the purpose of this project and some interesting info here...
 
 ## Description
 
-This app demonstrates a TypeScript setup for developing UI5 applications. The central entry point for all information about using TypeScript with UI5 is at [https://sap.github.io/ui5-typescript](https://sap.github.io/ui5-typescript).
-
-**The template is inspired by the [`SAP-samples/ui5-typescript-helloworld`](https://github.com/SAP-samples/ui5-typescript-helloworld) project which also contains [a detailed step-by-step guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md). It explains how this setup is created and how all the bits and pieces fit together.**
+This app demonstrates a setup for developing UI5 applications.
 
 ## Requirements
 
@@ -33,10 +31,6 @@ npm start
 As shown in the terminal after executing this command, the app is then running on http://localhost:8080/index.html. A browser window with this URL should automatically open.
 
 (When using yarn, do `yarn start` instead.)
-
-## Debug the App
-
-In the browser, you can directly debug the original TypeScript code, which is supplied via sourcemaps (need to be enabled in the browser's developer console if it does not work straight away). If the browser doesn't automatically jump to the TypeScript code when setting breakpoints, use e.g. `Ctrl`/`Cmd` + `P` in Chrome to open the `*.ts` file you want to debug.
 
 ## Build the App
 
@@ -80,21 +74,13 @@ With the self-contained build, the bootstrap URL in `index.html` has already bee
 
 ## Check the Code
 
-Do the following to run a TypeScript check:
-
-```sh
-npm run ts-typecheck
-```
-
-This checks the application code for any type errors (but will also complain in case of fundamental syntax issues which break the parsing).
-
-To lint the TypeScript code, do:
+To lint the code, do:
 
 ```sh
 npm run lint
 ```
 
-(Again, when using yarn, do `yarn ts-typecheck` and `yarn lint` instead.)
+(Again, when using yarn, do `yarn lint` instead.)
 
 ## License
 
