@@ -61,7 +61,7 @@ export async function getSensorReadings(entityId, begin, end) {
         });
     }
     return result;
-}
+};
 /**
  * Creates a power consumption recording based on sensor readings. Sensor readings are grouped into intervals
  * of a given length. Average (mean) power consumtion as well as the consumption standard deviation are
@@ -114,4 +114,4 @@ export async function createConsumptionRecording(sensorReadings, intervalLength 
         });
     }
     return recording;
-}
+};

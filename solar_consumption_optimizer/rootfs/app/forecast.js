@@ -1,0 +1,105 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+import fs from 'node:fs/promises';
+
+const forecastCacheFilename = "forecast-cache.json";
+
+/**
+ * Returns the solar forecast for the given solar panel installation.
+ * @param {Object} solarInfo Object containing latitude, longitude, declination, azimut and maximum Power (KW) of the solar panel intallation.
+ * @returns 
+ */
+export async function getSolarForecast(solarInfo) {
+    // read forecast cache file + check if there´s any content and if the content is valid / up to date
+    const cachedForecast = await getCachedForecast();
+    if (!cachedForecast || dayjs(cachedForecast.info.begin).isBefore(dayjs(), 'day')) {
+        // discard cache and get new forecast data
+        console.info("loading new forecast data from API");
+        const freshForecast = estimate(solarInfo);
+        await writeCachedForecast(freshForecast);
+        return freshForecast;
+    } else {
+        // cache is availbale and valid -> return cached forecast
+        console.info("returning forecast data from disk");
+        return cachedForecast;
+    }
+}
+
+async function getCachedForecast() {
+    try {
+        const cacheFile = await fs.readFile(forecastCacheFilename, { encoding: 'utf8' });
+        if (!cacheFile || cacheFile === "") {
+            throw { message: "empty forecast cache file" };
+        }
+        return JSON.parse(cacheFile);
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
+async function writeCachedForecast(forecast) {
+    try {
+        await fs.writeFile(forecastCacheFilename, forecast);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Request forecast data for the solar panel installtion described in solarInfo from the solar forecast web service.
+ * @param {Object} solarInfo 
+ * @returns {Object} Forecast data
+ * Example Result
+ {
+    info: {
+        latitude: 51.27,
+        longitude: 9.54,
+        distance: 0,
+        place: 'Crumbacher Straße 48, 34253 Crumbach, Germany',
+        timezone: 'Europe/Berlin',
+        time: '2024-07-10T11:50:32+02:00',
+        time_utc: '2024-07-10T09:50:32+00:00',
+        begin: '2024-07-10T05:18:36+02:00',
+        end: '2024-07-11T21:35:14+02:00',
+    },
+    intervals: [
+        { timestamp: '2024-07-10T05:18:36+02:00', power: 0 },
+        { timestamp: '2024-07-10T06:00:00+02:00', power: 111 },
+        ...
+    ]
+}
+ */
+async function estimate(solarInfo) {
+    const url = `https://api.forecast.solar/estimate/${solarInfo.latitude}/${solarInfo.longitude}/${solarInfo.declination}/${solarInfo.azimut}/${solarInfo.maxPower}`;
+    const response = await fetch(url, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    console.log(url, response.status);
+    if (response.status >= 300) {
+        throw { message: `cannot read solar forecast data; status code ${response.status}` };
+    }
+    const forecast = (await response.json());
+    if (!forecast.result.watts) {
+        throw { message: `forecast service did not return any forecast data` };
+    }
+    const intervals = Object.entries(forecast.result.watts).map(a => {
+        return {
+            // consider the time zone the solar forecast response refers to
+            timestamp: dayjs.tz(a[0], forecast.message.info.timezone).format(),
+            power: a[1]
+        };
+    })
+    const result = {
+        info: forecast.message.info,
+        intervals: intervals
+    };
+    result.info.begin = intervals[0].timestamp;
+    result.info.end = intervals[intervals.length - 1].timestamp;
+    return result;
+};
