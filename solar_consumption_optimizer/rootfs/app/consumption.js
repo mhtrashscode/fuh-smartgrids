@@ -1,7 +1,10 @@
 import dayjs from "dayjs";
 import config from "./config.js";
+import fs from 'node:fs/promises';
 import { nanoid } from 'nanoid';
 import { mean, std, round } from 'mathjs';
+
+const recordingsFileName = 'recordings.json';
 
 /**
  * Requests the entity states / sensor readings via the home assistant API for the given period.
@@ -83,9 +86,11 @@ export async function getSensorReadings(entityId, begin, end) {
     ]
 }
  */
-export async function createConsumptionRecording(sensorReadings, intervalLength = 5) {
+export async function createConsumptionRecording(sensorReadings, name = '', intervalLength = 5) {
+    const id = nanoid();
     const recording = {
-        id: nanoid(),
+        id: id,
+        name : name === '' ? id : name,
         entityId: sensorReadings.entityId,
         totalConsumption: 0.00,
         recordedAt: dayjs().format(),
@@ -158,5 +163,50 @@ export async function getEntities() {
     } catch (error) {
         console.error(error);
         return { message: error.message };
+    }
+}
+
+export async function storeRecording(recording) {
+    try {
+        const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
+        const recordings = JSON.parse(recFile);
+        recordings.push(recording);
+        await fs.writeFile(recordingsFileName, JSON.stringify(recordings));
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export async function loadRecording(id) {
+    try {
+        const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
+        const recordings = JSON.parse(recFile);
+        return recordings.find(r => r.id == id);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export async function loadAllRecordings() {
+    try {
+        const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
+        return JSON.parse(recFile);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
+export async function removeRecording(id) {
+    try {
+        const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
+        const recordings = JSON.parse(recFile);
+        const newRecs = recordings.filter(r => r.id != id);
+        await fs.writeFile(recordingsFileName, JSON.stringify(newRecs));
+    } catch (err) {
+        console.error(err);
+        throw err;
     }
 }

@@ -43,7 +43,7 @@ async function getCachedForecast() {
 
 async function writeCachedForecast(forecast) {
     try {
-        await fs.writeFile(forecastCacheFilename, forecast);
+        await fs.writeFile(forecastCacheFilename, JSON.stringify(forecast));
     } catch (err) {
         console.log(err);
     }
