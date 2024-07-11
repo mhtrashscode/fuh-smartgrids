@@ -9,25 +9,56 @@
 	}">
 
 	<Page
-		title="{i18n>appTitle}"
-		id="page">
+		id="mainPage"
+		showHeader="false">
 		<content>
-			<IllustratedMessage
-				title="{i18n>appTitle}"
-				illustrationType="sapIllus-SuccessHighFive"
-				enableVerticalResponsiveness="true"
-				description="{i18n>appDescription}">
-				<additionalContent>
-					<Button
-						id="helloButton"
-						text="{formatter: 'formatter.formatValue', path: 'i18n>btnText'}"
-						press="sayHello" />
-					<Button
-						id="doStuffButton"
-						text="Do Stuff!"
-						press="doStuff" />
-				</additionalContent>
-			</IllustratedMessage>
+			<ObjectHeader
+				title="Optimize Solar Power Consumption"
+				backgroundDesign="Solid">
+				<!--
+				<attributes>
+					<ObjectAttribute title="Weight" text="{WeightMeasure} {WeightUnit}" />
+					<ObjectAttribute title="Dimensions" text="{Width} x {Depth} X {Height} {DimUnit}" />
+				</attributes>
+				-->
+			</ObjectHeader>
+			<IconTabBar
+				class="sapUiSmallMarginBottom sapUiResponsiveContentPadding"
+				id="icontabbar"
+				select="tabBarSelect">
+				<items>
+					<IconTabFilter
+						key="solarInfo"
+						text="Solar Information">
+						<!--TODO: show address data and current solar forecast as line chart-->
+					</IconTabFilter>
+					<IconTabFilter
+						key="recordings"
+						text="Recordings">
+						<List
+							items="{viewData>/recordings}"
+							headerText="Recordings">
+							<ObjectListItem
+								intro="{viewData>id}"
+								title="{viewData>name}"
+								type="Active"
+								number="{
+									path: 'viewData>totalConsumption',
+									formatter: 'formatter.w2kw'
+								}"
+								numberUnit="KW"
+								press="recordingPress(${viewData>id})">
+								<ObjectAttribute title="Recorded At" text="{
+									path: 'viewData>recordedAt',
+									formatter: 'formatter.formatDate'
+								}" />
+								<ObjectAttribute title="Interval Length" text="{viewData>intervalLength} min" />
+								<ObjectAttribute title="Recorded With" text="{viewData>entityId}" />
+							</ObjectListItem>
+						</List>
+					</IconTabFilter>				
+				</items>
+			</IconTabBar>
 		</content>
 	</Page>
 

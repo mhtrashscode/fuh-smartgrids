@@ -1,6 +1,5 @@
 {
 	"_version": "1.12.0",
-
 	"sap.app": {
 		"id": "de.fernunihagen.smartgrids.socopt",
 		"type": "application",
@@ -11,7 +10,6 @@
 			"version": "${version}"
 		}
 	},
-
 	"sap.ui": {
 		"technology": "UI5",
 		"icons": {},
@@ -21,7 +19,6 @@
 			"phone": true
 		}
 	},
-
 	"sap.ui5": {
 		"rootView": {
 			"viewName": "de.fernunihagen.smartgrids.socopt.view.App",
@@ -29,7 +26,6 @@
 			"async": true,
 			"id": "app"
 		},
-
 		"dependencies": {
 			"minUI5Version": "1.125.0",
 			"libs": {
@@ -37,14 +33,11 @@
 				"sap.m": {}
 			}
 		},
-
 		"handleValidation": true,
-
 		"contentDensities": {
 			"compact": true,
 			"cozy": true
 		},
-
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
@@ -53,7 +46,6 @@
 				}
 			}
 		},
-
 		"routing": {
 			"config": {
 				"routerClass": "sap.m.routing.Router",
@@ -66,23 +58,33 @@
 			"routes": [
 				{
 					"pattern": "",
-					"name": "main",
+					"name": "default",
 					"target": "main"
 				},
 				{
-					"pattern": "addRecording",
-					"name": "addRecording",
-					"target": "addRecording"
-				}				
+					"pattern": "info",
+					"name": "solarInfo",
+					"target": "main"
+				},				
+				{
+					"pattern": "recordings",
+					"name": "recordings",
+					"target": "main"
+				},
+				{
+					"pattern": "recording/{id}",
+					"name": "recording",
+					"target": "recording"
+				}
 			],
 			"targets": {
 				"main": {
 					"viewId": "main",
 					"viewName": "Main"
 				},
-				"addRecording": {
-					"viewId": "addRecording",
-					"viewName": "AddRecording"
+				"recording": {
+					"viewId": "recording",
+					"viewName": "Recording"
 				}
 			}
 		}

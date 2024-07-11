@@ -10,7 +10,7 @@ import {
   removeRecording,
   loadRecording,
   loadAllRecordings
-} from './prediction.js';
+} from './consumption.js';
 import { getSolarForecast } from './forecast.js';
 import { getPredictions } from './prediction.js';
 
