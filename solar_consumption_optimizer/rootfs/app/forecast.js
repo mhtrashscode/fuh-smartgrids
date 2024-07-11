@@ -15,16 +15,21 @@ const forecastCacheFilename = "forecast-cache.json";
 export async function getSolarForecast(solarInfo) {
     // read forecast cache file + check if there´s any content and if the content is valid / up to date
     const cachedForecast = await getCachedForecast();
-    if (!cachedForecast || dayjs(cachedForecast.info.begin).isBefore(dayjs(), 'day')) {
-        // discard cache and get new forecast data
-        console.info("loading new forecast data from API");
-        const freshForecast = estimate(solarInfo);
-        await writeCachedForecast(freshForecast);
-        return freshForecast;
-    } else {
+    let cacheValid = !isObjectEmpty(cachedForecast);
+    if (cacheValid) {
+        // check if forecast data refers to a date in the past
+        cacheValid = !dayjs(cachedForecast.info.begin).isBefore(dayjs(), 'day');
+    }
+    if (cacheValid) {
         // cache is availbale and valid -> return cached forecast
         console.info("returning forecast data from disk");
         return cachedForecast;
+    } else {
+        // discard cache and get new forecast data
+        console.info("loading new forecast data from API");
+        const freshForecast = await estimate(solarInfo);
+        await writeCachedForecast(freshForecast);
+        return freshForecast;
     }
 }
 
@@ -102,4 +107,12 @@ async function estimate(solarInfo) {
     result.info.begin = intervals[0].timestamp;
     result.info.end = intervals[intervals.length - 1].timestamp;
     return result;
+};
+
+function isObjectEmpty(objectName) {
+    return (
+        objectName &&
+        Object.keys(objectName).length === 0 &&
+        objectName.constructor === Object
+    );
 };

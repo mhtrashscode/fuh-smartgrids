@@ -86,7 +86,7 @@ export async function getSensorReadings(entityId, begin, end) {
     ]
 }
  */
-export async function createConsumptionRecording(sensorReadings, name = '', intervalLength = 5) {
+export function createConsumptionRecording(sensorReadings, name = '', intervalLength = 5) {
     const id = nanoid();
     const recording = {
         id: id,

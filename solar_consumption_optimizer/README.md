@@ -22,7 +22,7 @@ TODO
 
 ##### Read energy consumption recordings
 
-##### Parameters
+##### Query Parameters
 
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
@@ -58,29 +58,27 @@ TODO
 ##### Example Request Body
 
 ```json
-[
-    {
-        "name":"Laundry Program A",
-        "entityId":"sensor.randometer",
-        "begin":"2024-07-10T17:37:10+02:00",
-        "end":"2024-07-10T20:00:00+02:00",
-        "intervalLength":5
-    }
-]
+{
+    "name":"Laundry Program A",
+    "entityId":"sensor.randometer",
+    "begin":"2024-07-10T17:37:10+02:00",
+    "end":"2024-07-10T20:00:00+02:00",
+    "intervalLength":5
+}
 ```
 
 ##### Responses
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Recording created successfully`                                    |
+> | `201`         | `text/plain;charset=UTF-8`        | `{ message: "Recording created successfully", recording: {...}}`    |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
-> | `404`         | `application/json`                | `{"code":"400","message":"Entity not found"}`                            |
+> | `404`         | `application/json`                | `{"code":"404","message":"Entity not found"}`                       |
 > 
 </details>
 
 <details>
-<summary><code>DELETE</code> <code>/api/recordings</code></summary>
+<summary><code>DELETE</code> <code>/api/recordings/:id</code></summary>
 
 ##### Remove an energy consumption recording
 
@@ -95,13 +93,13 @@ TODO
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `text/plain;charset=UTF-8`        | `Recording removed successfully`                                    |
-> | `404`         | `application/json`                | `{"code":"400","message":"Recording not found"}`                    |
+> | `200`         | `text/plain;charset=UTF-8`        | `{ message: "recording ${id} deleted" }`                                    |
+> | `404`         | `application/json`                | `{ message: "recording ${id} not found" }`                    |
 > 
 </details>
 
 <details>
-<summary><code>GET</code> <code>/api/prediction</code></summary>
+<summary><code>GET</code> <code>/api/predictions/:id?span,upto</code></summary>
 
 ##### Get energy coverage predictions
 
@@ -109,17 +107,17 @@ TODO
 
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | id        |  mandatory | string                 | Consumption recording ID to be predicted.                             |
+> | id        |  mandatory | string                 | Consumption recording ID for which energy coverage should be predicted.|
 > | span      |  optional | number                  | Time span between coverage predictions.                               |
-> | upto      |  optional | number                  | Maximum number of predictions to be retrieved                         |
+> | upto      |  optional | number                  | Maximum number of predictions to be retrieved.                        |
 
 
 ##### Responses
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `application/json`                | See example below                                 |
-> | `404`         | `application/json`                | `{"code":"400","message":"Recording not found"}`                    |
+> | `200`         | `application/json`                | See example below.                                                  |
+> | `404`         | `application/json`                | `{"code":"404","message":"Recording not found"}`                    |
 
 ##### Example Response Body
 

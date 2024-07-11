@@ -1,23 +1,103 @@
 import express from 'express';
 import path from 'path';
-import fetch from 'node-fetch';
 
 import config from "./config.js";
+import {
+  getSensorReadings,
+  createConsumptionRecording,
+  getEntities,
+  storeRecording,
+  removeRecording,
+  loadRecording,
+  loadAllRecordings
+} from './prediction.js';
+import { getSolarForecast } from './forecast.js';
+import { getPredictions } from './prediction.js';
 
-//const express = require('express');
-//const path = require('path');
 const app = express();
 
 console.log(`Supervisor Token: ${config.haToken}`);
 
-app.get("/api/entities", function (req, res) {
-  getEntities().then(data => {
-    res.send(data);
-  })
-});
-
+// Middleware that serves static files of the UI application
 app.use('/', express.static(path.join(process.cwd(), 'static')));
 
+// Parse HTTP request body as JSON
+app.use(express.json());
+
+app.get("/api/entities", async (req, res) => {
+  res.send(await getEntities());
+});
+
+app.get("/api/recordings", async (req, res, next) => {
+  try {
+    if (req.query.id) {
+      // load and return a single recording
+      const recording = await loadRecording(req.query.id);
+      if (recording) {
+        res.status(200).send(recording);
+      }
+      else {
+        res.status(404).send({ message: `recording with ID ${req.query.id} not found` });
+      }
+    } else {
+      // load and return all recordings
+      res.status(200).send(await loadAllRecordings());
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/api/recordings", async (req, res, next) => {
+  try {
+    const d = req.body;
+    const sensorReadings = await getSensorReadings(d.entityId, d.begin, d.end);
+    if (!sensorReadings || sensorReadings.readings.length === 0) {
+      res.status(400).send({ message: `cannot find sensor readings for entity ${d.entity} between ${d.begin} and ${d.end}` });
+      return;
+    }
+    const recording = createConsumptionRecording(sensorReadings, d.name, d.intervalLength);
+    await storeRecording(recording);
+    res.status(201).send(recording);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete("/api/recordings/:id", async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const rec = await loadRecording(id);
+    if (rec) {
+      await removeRecording(id);
+      res.status(200).send({ message: `recording ${id} deleted` });
+    } else {
+      res.status(404).send({ message: `recording ${id} not found` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get("/api/predictions/:id", async (req, res, next) => {
+  try {
+    const rec = await loadRecording(req.params.id);
+    if (!rec) {
+      res.status(404).send({ message: `recording ${id} not found` });
+      return;
+    }
+    const forecast = await getSolarForecast(config.solarInfo);
+    if (!forecast) {
+      res.status(400).send({ message: `cannot get solar forecast for ${config.solarInfo.latitude}/${config.solarInfo.longitude}` });
+      return;
+    }
+    res.status(200).send(getPredictions(rec, forecast, req.query.span, req.query.upto));
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Startup request processing
 app.listen(config.port, () => {
-  console.log(`Socopt Addon listening on port ${port}`)
+  console.log(`Socopt Addon listening on port ${config.port}`)
 });

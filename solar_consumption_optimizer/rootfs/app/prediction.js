@@ -8,28 +8,28 @@ import { round } from 'mathjs';
  * @param {Object} forecast 
  * @param {Number} span Time span between coverage inspections.
  * @param {Number} upto Maximum number of time frame recommendations to be returned.
- * @returns An array of energy coverage objects.
+ * @returns An array of prediction objects.
  */
-export function findBestCoverage(recording, forecast, span = 15, upto = 3) {
+export function getPredictions(recording, forecast, span = 15, upto = 3) {
     // Determine time boundaries
     const earliestStart = dayjs(forecast.info.begin).minute(0).second(0).add(1, 'hour');
     const recordingLength = recording.intervals.length * recording.intervalLength;
     const latestStart = dayjs(forecast.info.end).subtract(recordingLength, 'minute');
-    // Execute inspections and calculate energy coverages
-    const inspections = [];
+    // Run predictions and calculate energy coverages
+    const predictions = [];
     let inspectionBegin = earliestStart;
     while (inspectionBegin.isBefore(latestStart)) {
-        const inspection = calculateCoverage(inspectionBegin, recording, forecast);
-        if (inspection.energyCovered > 0) {
-            inspections.push(inspection);
+        const prediction = predict(inspectionBegin, recording, forecast);
+        if (prediction.energyCovered > 0) {
+            predictions.push(prediction);
         }
         inspectionBegin = inspectionBegin.add(span, 'minute');
     }
-    // Sort inspections by energy coverage and return those with highest coverage
-    inspections.sort((a, b) => {
+    // Sort predictions by energy coverage and return those with highest coverage
+    predictions.sort((a, b) => {
         return a.energyCovered > b.energyCovered ? -1 : 1;
     });
-    return inspections.slice(0, upto);
+    return predictions.slice(0, upto);
 }
 
 /**
@@ -38,6 +38,7 @@ export function findBestCoverage(recording, forecast, span = 15, upto = 3) {
  * @param {Date} begin 
  * @param {Object} recording 
  * @param {Object} forecast 
+ * @returns {Object} A prediction Object.
 Example Result
 {
     begin: "2024-06-20 10:00:00",
@@ -56,7 +57,7 @@ Example Result
     ]
 }
 */
-export function calculateCoverage(begin, recording, forecast) {
+export function predict(begin, recording, forecast) {
     const intervals = [];
     let intervalBegin = dayjs(begin);
     let totalDeficitWattMinutes = 0.0;
