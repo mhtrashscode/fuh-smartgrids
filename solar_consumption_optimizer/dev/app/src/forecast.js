@@ -5,7 +5,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 import fs from 'node:fs/promises';
 
-const forecastCacheFilename = "forecast-cache.json";
+const forecastCacheFilename = "../data/forecast-cache.json";
 
 /**
  * Validates the given solar plane information using the solar forecast web service. Returns detailed information about the solar plane
@@ -56,10 +56,8 @@ export async function getSolarForecast(solarInfo) {
 
 async function getCachedForecast() {
     try {
+        await createFileIfNotExist(forecastCacheFilename, '{}');
         const cacheFile = await fs.readFile(forecastCacheFilename, { encoding: 'utf8' });
-        if (!cacheFile || cacheFile === "") {
-            throw { message: "empty forecast cache file" };
-        }
         return JSON.parse(cacheFile);
     } catch (err) {
         console.log(err);
@@ -72,6 +70,17 @@ async function writeCachedForecast(forecast) {
         await fs.writeFile(forecastCacheFilename, JSON.stringify(forecast));
     } catch (err) {
         console.log(err);
+    }
+}
+
+async function createFileIfNotExist(filename, content) {
+    try {
+        await fs.readFile(filename, { encoding: 'utf8' });
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            await fs.writeFile(filename, content);
+        }
+        else throw error;
     }
 }
 

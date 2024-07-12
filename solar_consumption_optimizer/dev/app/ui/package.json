@@ -5,8 +5,8 @@
 	"author": "Max",
 	"license": "Apache-2.0",
 	"scripts": {
-		"clean": "rimraf dist coverage",
-		"build": "ui5 build --dest ../rootfs/app/static --clean-dest",
+		"clean": "rimraf ../static",
+		"build": "ui5 build --dest ../static --clean-dest",
 		"start": "ui5 serve --port 8080 -o index.html --verbose",
 		"lint": "eslint webapp"
 	},

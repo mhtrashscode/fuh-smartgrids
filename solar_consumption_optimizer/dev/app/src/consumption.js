@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import { nanoid } from 'nanoid';
 import { mean, std, round } from 'mathjs';
 
-const recordingsFileName = 'recordings.json';
+const recordingsFileName = '../data/recordings.json';
 const config = await getConfig();
 
 /**
@@ -91,7 +91,7 @@ export function createConsumptionRecording(sensorReadings, name = '', intervalLe
     const id = nanoid();
     const recording = {
         id: id,
-        name : name === '' ? id : name,
+        name: name === '' ? id : name,
         entityId: sensorReadings.entityId,
         totalConsumption: 0.00,
         recordedAt: dayjs().format(),
@@ -169,6 +169,7 @@ export async function getEntities() {
 
 export async function storeRecording(recording) {
     try {
+        await createFileIfNotExist(recordingsFileName, '[]');
         const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
         const recordings = JSON.parse(recFile);
         recordings.push(recording);
@@ -181,6 +182,7 @@ export async function storeRecording(recording) {
 
 export async function loadRecording(id) {
     try {
+        await createFileIfNotExist(recordingsFileName, '[]');
         const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
         const recordings = JSON.parse(recFile);
         return recordings.find(r => r.id == id);
@@ -192,6 +194,7 @@ export async function loadRecording(id) {
 
 export async function loadAllRecordings() {
     try {
+        await createFileIfNotExist(recordingsFileName, '[]');
         const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
         return JSON.parse(recFile);
     } catch (err) {
@@ -202,6 +205,7 @@ export async function loadAllRecordings() {
 
 export async function removeRecording(id) {
     try {
+        await createFileIfNotExist(recordingsFileName, '[]');
         const recFile = await fs.readFile(recordingsFileName, { encoding: 'utf8' });
         const recordings = JSON.parse(recFile);
         const newRecs = recordings.filter(r => r.id != id);
@@ -209,5 +213,16 @@ export async function removeRecording(id) {
     } catch (err) {
         console.error(err);
         throw err;
+    }
+}
+
+async function createFileIfNotExist(filename, content) {
+    try {
+        await fs.readFile(filename, { encoding: 'utf8' });
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            await fs.writeFile(filename, content);
+        }
+        else throw error;
     }
 }

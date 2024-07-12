@@ -21,6 +21,7 @@ const config = await getConfig();
 const app = express();
 
 console.log(`Supervisor Token: ${config.haToken}`);
+console.log(`Serving static content from ${path.join(process.cwd(), 'static')}`);
 
 // Middleware that serves static files of the UI application
 app.use('/', express.static(path.join(process.cwd(), 'static')));

@@ -2,15 +2,14 @@
 
 # this script is executed in context of /app
 # debug
+now=$(date)
+echo "new container start at $now"
 pwd
-whoami
 node --version
 echo "Supervisor Token"
 echo ${SUPERVISOR_TOKEN}
 # run web server
- npm run start
+npm run start
+
 # keep container alive
 #sleep infinity
-
-
-

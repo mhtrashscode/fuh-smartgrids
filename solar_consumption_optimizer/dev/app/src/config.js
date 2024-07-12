@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+
 const local = {
     port: 3001,
     haURL: "http://127.0.0.1:8122/api",
@@ -28,7 +30,7 @@ async function readConfig() {
     // return home assistant addon configuration
     try {
         const file = await fs.readFile(optionsPath, { encoding: 'utf8' });
-        const options = JSON.parse(recFile);
+        const options = JSON.parse(file);
         return {
             port: 3000,
             haURL: "http://supervisor/core/api",
