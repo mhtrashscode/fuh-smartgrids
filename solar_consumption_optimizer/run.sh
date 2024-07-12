@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv sh
+#!/usr/bin/with-contenv bashio
 
 # this script is executed in context of /app
 # debug
@@ -11,3 +11,6 @@ echo ${SUPERVISOR_TOKEN}
  npm run start
 # keep container alive
 #sleep infinity
+
+
+

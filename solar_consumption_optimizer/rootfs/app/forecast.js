@@ -8,6 +8,27 @@ import fs from 'node:fs/promises';
 const forecastCacheFilename = "forecast-cache.json";
 
 /**
+ * Validates the given solar plane information using the solar forecast web service. Returns detailed information about the solar plane
+ * or throws an error in case plane data is invalid.
+ * @param {Object} solarInfo Object containing latitude, longitude, declination, azimut and maximum Power (KW) of the solar panel intallation.
+ * @returns 
+ */
+export async function validateSolarInfo(solarInfo) {
+    const url = `https://api.forecast.solar/check/${solarInfo.latitude}/${solarInfo.longitude}/${solarInfo.declination}/${solarInfo.azimut}/${solarInfo.maxPower}`;
+    const response = await fetch(url, {
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    console.log(url, response.status);
+    if (response.status >= 300) {
+        throw { message: `cannot validate solar plane information; status code ${response.status}` };
+    }
+    const result = (await response.json());
+    return result.result;
+}
+
+/**
  * Returns the solar forecast for the given solar panel installation.
  * @param {Object} solarInfo Object containing latitude, longitude, declination, azimut and maximum Power (KW) of the solar panel intallation.
  * @returns 

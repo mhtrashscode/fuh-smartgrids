@@ -78,6 +78,16 @@ sap.ui.define([
                 throw new Error(response.message);
             }
             return await response.json();
+        },
+
+        getSolarInfo: async function () {
+            const response = await fetch(`api/solarinfo`, {
+                method: "GET"
+            });
+            if (!response.ok) {
+                throw new Error(response.message);
+            }
+            return await response.json();
         }
     }
 });

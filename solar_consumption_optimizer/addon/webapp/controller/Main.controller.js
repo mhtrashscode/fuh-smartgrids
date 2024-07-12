@@ -12,6 +12,7 @@ sap.ui.define([
 			// setup local model and initiate data load
 			const model = new JSONModel({
 				entities: [],
+				solarInfo: undefined,
 				recordings: [],
 				newRecording: {
 					entityId: undefined,
@@ -24,6 +25,7 @@ sap.ui.define([
 			});
 			const view = this.getView();
 			view.setModel(model, "viewData");
+			this.loadSolarInfo();
 			this.loadEntities();
 			this.loadRecordings();
 			// handle routing
@@ -66,6 +68,12 @@ sap.ui.define([
 			} catch (error) {
 				MessageBox.error(error.message);
 			}
+		},
+
+		loadSolarInfo: async function(){
+			const info = await Service.getSolarInfo();
+			const model = this.getModel("viewData");
+			model.setProperty("/solarInfo", info);			
 		},
 
 		recordingPress: function (id) {

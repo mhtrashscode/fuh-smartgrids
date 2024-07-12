@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 
-import config from "./config.js";
+import getConfig from "./config.js";
 import {
   getSensorReadings,
   createConsumptionRecording,
@@ -11,9 +11,13 @@ import {
   loadRecording,
   loadAllRecordings
 } from './consumption.js';
-import { getSolarForecast } from './forecast.js';
+import {
+  getSolarForecast,
+  validateSolarInfo
+} from './forecast.js';
 import { getPredictions } from './prediction.js';
 
+const config = await getConfig();
 const app = express();
 
 console.log(`Supervisor Token: ${config.haToken}`);
@@ -94,6 +98,14 @@ app.get("/api/predictions/:id", async (req, res, next) => {
     res.status(200).send(getPredictions(rec, forecast, req.query.span, req.query.upto));
   } catch (error) {
     next(error);
+  }
+});
+
+app.get("/api/solarinfo", async (req, res, next) => {
+  try {
+    res.status(200).send(await validateSolarInfo(config.solarInfo));
+  } catch (error) {
+    res.status(500).send({ message: "Solar information is invalid" });
   }
 });
 

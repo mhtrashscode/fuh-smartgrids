@@ -142,3 +142,31 @@ TODO
 ]
 ```
 </details>
+
+<details>
+<summary><code>GET</code> <code>/api/solarinfo/</code></summary>
+
+##### Get energy coverage predictions
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `application/json`                | See example below.                                                  |
+> | `500`         | `application/json`                | `{"message":"Solar information is invalid"}`                        |
+
+##### Example Response Body
+
+```json
+{
+    "latitude": "52° 16' 12\" N",
+    "longitude": "09° 36' 24\" E",
+    "declination": "45°",
+    "azimuth": "45°",
+    "power": "3.5 kWp",
+    "place": "Hauptstraße 37, 01234 Heidenheim, Germany",
+    "timezone": "Europe/Berlin"
+    }
+```
+</details>

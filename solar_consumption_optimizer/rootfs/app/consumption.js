@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
-import config from "./config.js";
+import getConfig from "./config.js";
 import fs from 'node:fs/promises';
 import { nanoid } from 'nanoid';
 import { mean, std, round } from 'mathjs';
 
 const recordingsFileName = 'recordings.json';
+const config = await getConfig();
 
 /**
  * Requests the entity states / sensor readings via the home assistant API for the given period.
