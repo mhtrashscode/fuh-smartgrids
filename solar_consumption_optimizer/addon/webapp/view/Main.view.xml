@@ -10,7 +10,8 @@
 
 	<Page
 		id="mainPage"
-		showHeader="false">
+		showHeader="false"
+		floatingFooter="true">
 		<content>
 			<ObjectHeader
 				title="Optimize Solar Power Consumption"
@@ -58,8 +59,13 @@
 						</List>
 					</IconTabFilter>				
 				</items>
-			</IconTabBar>
+			</IconTabBar>			
 		</content>
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button type="Default" icon="sap-icon://add" text="Add Recording" press="addRecordingPress"/>
+			</OverflowToolbar>
+		</footer>		
 	</Page>
-
 </mvc:View>

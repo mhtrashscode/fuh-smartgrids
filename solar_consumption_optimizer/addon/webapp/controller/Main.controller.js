@@ -11,10 +11,19 @@ sap.ui.define([
 		onInit: function () {
 			// setup local model and initiate data load
 			const model = new JSONModel({
-				recordings: []
+				entities: [],
+				recordings: [],
+				newRecording: {
+					entityId: undefined,
+					name: undefined,
+					begin: undefined,
+					end: undefined,
+					intervalLength: 5
+				}
 			});
 			const view = this.getView();
 			view.setModel(model, "viewData");
+			this.loadEntities();
 			this.loadRecordings();
 			// handle routing
 			this.getRouter().attachRoutePatternMatched(this.navRouteMatched, this);
@@ -37,6 +46,12 @@ sap.ui.define([
 			}
 		},
 
+		loadEntities: async function () {
+			const entities = await Service.getEntities();
+			const model = this.getModel("viewData");
+			model.setProperty("/entities", entities);
+		},
+
 		loadRecordings: async function () {
 			const recs = await Service.getRecordings();
 			const model = this.getModel("viewData");
@@ -47,6 +62,36 @@ sap.ui.define([
 			this.navTo("recording", {
 				id: id
 			});
+		},
+
+		addRecordingPress: async function () {
+			if (!this.dialog) {
+				const view = this.getView();
+				const dialog = await this.loadFragment({
+					name: "de.fernunihagen.smartgrids.socopt.fragments.RecordingDialog"
+				});
+				view.addDependent(dialog);
+				this.dialog = dialog;
+			}
+			this.dialog.open();
+		},
+
+		saveRecordingPress: async function () {
+			const model = this.getModel("viewData");
+			const rec = model.getProperty("/newRecording");
+			console.log(rec);
+
+			try {
+				await Service.postRecording(rec);
+				this.loadRecordings();
+				this.dialog.close();
+			} catch (error) {
+				MessageBox.error(error.message);
+			}
+		},
+
+		cancelRecordingPress: function () {
+			this.dialog.close();
 		}
 	});
 });

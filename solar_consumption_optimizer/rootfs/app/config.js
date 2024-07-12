@@ -24,4 +24,4 @@ const local = {
     }
 }
 
-export default ha;
+export default local;
