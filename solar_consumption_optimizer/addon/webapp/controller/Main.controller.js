@@ -19,7 +19,8 @@ sap.ui.define([
 					begin: undefined,
 					end: undefined,
 					intervalLength: 5
-				}
+				},
+				recListMode: "None"
 			});
 			const view = this.getView();
 			view.setModel(model, "viewData");
@@ -58,6 +59,15 @@ sap.ui.define([
 			model.setProperty("/recordings", recs);
 		},
 
+		deleteRecording: async function (id) {
+			try {
+				 await Service.deleteRecording(id);
+				this.loadRecordings();
+			} catch (error) {
+				MessageBox.error(error.message);
+			}
+		},
+
 		recordingPress: function (id) {
 			this.navTo("recording", {
 				id: id
@@ -92,6 +102,21 @@ sap.ui.define([
 
 		cancelRecordingPress: function () {
 			this.dialog.close();
+		},
+
+		toggleRecordingDelete: function () {
+			const model = this.getModel("viewData");
+			let listMode = model.getProperty("/recListMode");
+			if (listMode === "None") listMode = 'Delete';
+			else listMode = 'None';
+			model.setProperty("/recListMode", listMode);
+		},
+
+		recDeletePress: function (event) {
+			const item = event.getParameter("listItem");
+			const c = item.getBindingContext("viewData");
+			const rec = c.getModel().getProperty(c.getPath());
+			this.deleteRecording(rec.id);
 		}
 	});
 });

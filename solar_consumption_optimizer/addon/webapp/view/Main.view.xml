@@ -38,7 +38,17 @@
 						text="Recordings">
 						<List
 							items="{viewData>/recordings}"
-							headerText="Recordings">
+							mode="{viewData>/recListMode}"
+							delete="recDeletePress">
+							<headerToolbar>
+								<OverflowToolbar>
+									<Title text="Recordings" level="H2" />
+									<ToolbarSpacer />
+									<ToggleButton id="toggleRecordingDelete"
+										text="Delete Recordings"
+										press="toggleRecordingDelete" />
+								</OverflowToolbar>
+							</headerToolbar>							
 							<ObjectListItem
 								intro="{viewData>id}"
 								title="{viewData>name}"

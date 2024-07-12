@@ -54,6 +54,16 @@ sap.ui.define([
             }
         },
 
+        deleteRecording: async function (id) {
+            const response = await fetch(`api/recordings/${id}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error(response.message);
+            }
+            return await response.json();
+        },
+
         getPredictions: async function (recordingId, span = 120, upto = 10) {
             const p = { span: span, upto: upto };
             if (!p.span) delete p.span;
